@@ -42,6 +42,36 @@ git clone https://github.com/LazyVim/starter "$NVIM_CONFIG"
 # starter의 .git 제거 (사용자가 자체적으로 버전 관리할 수 있도록)
 rm -rf "$NVIM_CONFIG/.git"
 
+# Anaconda 가상환경 인식을 위한 venv-selector 설정
+echo "=== venv-selector Anaconda 설정 ==="
+
+VENV_SELECTOR_CONFIG="$NVIM_CONFIG/lua/plugins/venv-selector.lua"
+
+# Anaconda 설치 경로 자동 감지
+ANACONDA_BASE=""
+for candidate in "$HOME/anaconda3" "$HOME/miniconda3" "$HOME/miniforge3" "$HOME/mambaforge"; do
+  if [ -d "$candidate" ]; then
+    ANACONDA_BASE="$candidate"
+    break
+  fi
+done
+
+if [ -n "$ANACONDA_BASE" ]; then
+  cat > "$VENV_SELECTOR_CONFIG" << EOF
+return {
+  "linux-cultist/venv-selector.nvim",
+  opts = {
+    anaconda_base_path = "$ANACONDA_BASE",
+    anaconda_envs_path = "$ANACONDA_BASE/envs",
+  },
+}
+EOF
+  echo "Anaconda 경로를 감지했습니다: $ANACONDA_BASE"
+  echo "venv-selector 설정을 추가했습니다."
+else
+  echo "Anaconda 설치를 찾지 못했습니다. venv-selector 설정을 건너뜁니다."
+fi
+
 echo ""
 echo "=== LazyVim 설치 완료 ==="
 echo "nvim을 실행하면 플러그인이 자동으로 설치됩니다."
