@@ -42,6 +42,13 @@ fi
 
 echo "=== agnoster 테마 및 프롬프트 커스터마이징 ==="
 
+ZSHRC="$HOME/.zshrc"
+
+if [ ! -f "$ZSHRC" ]; then
+  echo ".zshrc 파일이 존재하지 않습니다."
+  exit 1
+fi
+
 # .zshrc에서 테마를 agnoster로 변경
 if grep -q '^ZSH_THEME=' "$ZSHRC"; then
   sed -i '' 's/^ZSH_THEME=.*/ZSH_THEME="agnoster"/' "$ZSHRC"
@@ -75,13 +82,6 @@ else
 fi
 
 echo "=== .zshrc 플러그인 설정 ==="
-
-ZSHRC="$HOME/.zshrc"
-
-if [ ! -f "$ZSHRC" ]; then
-  echo ".zshrc 파일이 존재하지 않습니다."
-  exit 1
-fi
 
 # plugins=(...) 라인에 플러그인 추가
 if grep -q "^plugins=" "$ZSHRC"; then
